@@ -1,18 +1,39 @@
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const Chat = require('../models/Chat');
+
+// Initialize the Gemini API client
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 exports.handleChat = async (req, res) => {
   try {
     const { message } = req.body;
     
-    // TODO: Integrate actual Google Gemini API here
-    // Mock response for now
-    let reply = "I am the Smart Election Assistant. How can I help you today?";
-    
-    if (message.toLowerCase().includes('vote')) {
-      reply = "To vote, you need to be a citizen of India and above 18 years of age. Make sure you are registered and have your Voter ID.";
-    } else if (message.toLowerCase().includes('document')) {
-      reply = "You will need an identity proof like Voter ID, Aadhaar Card, PAN Card, or Driving License to cast your vote.";
-    } else if (message.toLowerCase().includes('eligible')) {
-      reply = "You are eligible if you are 18 or older and your name is on the electoral roll.";
+    // Save query to DB for dashboard to display
+    if (message) {
+      const chatEntry = new Chat({ query: message });
+      await chatEntry.save();
     }
+
+    // Check if API key is configured
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ 
+        error: "Gemini API key is not configured. Please add GEMINI_API_KEY to your backend .env file." 
+      });
+    }
+
+    // Initialize the model
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Or gemini-1.5-flash
+
+    // Provide context for the Smart Election Assistant
+    const systemInstruction = "You are the Smart Election Assistant, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers.";
+    
+    // Call Gemini API
+    const result = await model.generateContent([
+      { text: systemInstruction },
+      { text: "User query: " + message }
+    ]);
+    
+    const reply = result.response.text();
 
     res.status(200).json({ reply });
   } catch (error) {

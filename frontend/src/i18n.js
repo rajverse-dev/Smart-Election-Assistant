@@ -11,6 +11,8 @@ const resources = {
       "ask_assistant": "Ask Assistant",
       "document_guide": "Document Guide",
       "home": "Home",
+      "dashboard": "Dashboard",
+      "simulation": "Mock EVM",
       "language": "Language",
       "theme": "Theme"
     }
@@ -24,6 +26,8 @@ const resources = {
       "ask_assistant": "உதவியாளரிடம் கேளுங்கள்",
       "document_guide": "ஆவண வழிகாட்டி",
       "home": "முகப்பு",
+      "dashboard": "கட்டுப்பாட்டகம்",
+      "simulation": "போலி வாக்குப்பதிவு இயந்திரம்",
       "language": "மொழி",
       "theme": "தீம்"
     }

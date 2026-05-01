@@ -14,6 +14,7 @@ app.use(express.json());
 app.use('/api/chat', require('./routes/chatRoutes'));
 app.use('/api/timeline', require('./routes/timelineRoutes'));
 app.use('/api/location', require('./routes/locationRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smart-election')
