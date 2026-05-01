@@ -14,7 +14,7 @@ const SUGGESTIONS = [
 
 const HeroChat = () => {
   const [messages, setMessages] = useState([
-    { text: "Hello! I am your Smart Election Assistant. How can I help you today?", sender: 'bot' }
+    { text: "Hello! I am VoteMate AI. How can I help you today?", sender: 'bot' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
@@ -38,15 +38,18 @@ const HeroChat = () => {
         body: JSON.stringify({ message: text })
       });
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Server error");
+      }
       
       setTimeout(() => {
-        setMessages(prev => [...prev, { text: data.reply, sender: 'bot' }]);
+        setMessages(prev => [...prev, { text: data.reply || "Sorry, I couldn't generate a response.", sender: 'bot' }]);
         setIsTyping(false);
       }, 600);
     } catch (error) {
       console.error(error);
       setIsTyping(false);
-      setMessages(prev => [...prev, { text: "Sorry, I'm having trouble connecting to the server.", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: error.message || "Sorry, I'm having trouble connecting to the server.", sender: 'bot' }]);
     }
   };
 
@@ -60,7 +63,7 @@ const HeroChat = () => {
             <Bot className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="font-extrabold text-xl leading-tight">Smart Election AI</h2>
+            <h2 className="font-extrabold text-xl leading-tight">VoteMate AI</h2>
             <p className="text-xs text-primary-100 flex items-center gap-1 opacity-90">
               <Sparkles className="w-3 h-3" /> Your 24/7 Voting Guide
             </p>

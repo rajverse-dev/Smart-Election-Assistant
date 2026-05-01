@@ -22,10 +22,13 @@ exports.handleChat = async (req, res) => {
     }
 
     // Initialize the model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); // Or gemini-1.5-flash
+    const model = genAI.getGenerativeModel(
+      { model: "gemini-1.5-flash" },
+      { customHeaders: { 'Referer': 'https://smart-election-assistant-837090440574.us-central1.run.app' } }
+    );
 
-    // Provide context for the Smart Election Assistant
-    const systemInstruction = "You are the Smart Election Assistant, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers.";
+    // Provide context for the VoteMate AI
+    const systemInstruction = "You are VoteMate AI, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers.";
     
     // Call Gemini API
     const result = await model.generateContent([

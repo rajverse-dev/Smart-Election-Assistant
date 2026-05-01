@@ -22,7 +22,7 @@ const Navbar = ({ darkMode, toggleDarkMode }) => {
     <nav className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link to="/" className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600 dark:from-primary-400 dark:to-purple-400 flex items-center gap-2">
-          <span className="text-3xl">🗳️</span> Smart Election
+          <img src="/logo.png" alt="VoteMate AI Logo" className="h-8 w-8 rounded-full" /> VoteMate AI
         </Link>
         <div className="hidden lg:flex items-center space-x-2">
           {navLinks.map((link) => (

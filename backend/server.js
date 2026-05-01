@@ -25,7 +25,7 @@ const path = require('path');
 
 // Basic route (Remove this later if it conflicts with frontend)
 app.get('/api', (req, res) => {
-  res.send('Smart Election Assistant API is running...');
+  res.send('VoteMate AI API is running...');
 });
 
 // Serve static frontend in production

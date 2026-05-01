@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      "welcome": "Welcome to Smart Election Assistant",
+      "welcome": "Welcome to VoteMate AI",
       "voting_guide": "Voting Guide",
       "timeline": "Election Timeline",
       "find_booth": "Find Polling Booth",

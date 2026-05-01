@@ -1,4 +1,4 @@
-# Smart Election Assistant 🗳️
+# VoteMate AI 🗳️
 
 A full-stack web application designed to help users understand the election process in an interactive, simple, and user-friendly way. It features a voting guide, election timeline, polling booth locator, and an AI-powered chatbot assistant.
 
