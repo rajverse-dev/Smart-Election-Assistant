@@ -21,7 +21,7 @@ const Dashboard = () => {
 
   // Fetch Dashboard Data
   useEffect(() => {
-    fetch('http://localhost:5000/api/dashboard')
+    fetch('/api/dashboard')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch dashboard data');
         return res.json();

@@ -2,8 +2,6 @@
 FROM node:22-alpine AS frontend-builder
 WORKDIR /app/frontend
 # Pass Vite variables during build
-ARG VITE_GOOGLE_MAPS_API_KEY
-ENV VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ .

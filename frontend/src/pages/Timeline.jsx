@@ -7,7 +7,7 @@ const Timeline = () => {
 
   useEffect(() => {
     // Fetch mock data from backend
-    fetch('http://localhost:5000/api/timeline')
+    fetch('/api/timeline')
       .then(res => res.json())
       .then(data => {
         setEvents(data);

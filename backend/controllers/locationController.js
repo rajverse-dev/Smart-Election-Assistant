@@ -33,8 +33,7 @@ exports.getNearbyBooths = async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
         'X-Goog-Api-Key': process.env.GOOGLE_MAPS_API_KEY,
-        'X-Goog-FieldMask': 'places.id,places.displayName.text,places.formattedAddress,places.location',
-        'Referer': req.headers.referer || req.headers.origin || 'http://localhost:5173'
+        'X-Goog-FieldMask': 'places.id,places.displayName.text,places.formattedAddress,places.location'
       },
       body: JSON.stringify(requestBody)
     });

@@ -1,7 +1,7 @@
+.gcloudignore
+.git
+.gitignore
 node_modules/
-.git/
-.env
-frontend/dist/
 frontend/node_modules/
 backend/node_modules/
-backend/.env
+frontend/dist/

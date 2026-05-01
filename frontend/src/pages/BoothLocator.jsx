@@ -16,7 +16,7 @@ const BoothLocator = () => {
           const lng = position.coords.longitude;
           setUserLocation({ lat, lng });
 
-          fetch(`http://localhost:5000/api/location/booths?lat=${lat}&lng=${lng}`)
+          fetch(`/api/location/booths?lat=${lat}&lng=${lng}`)
             .then(res => res.json())
             .then(data => {
               if (Array.isArray(data)) {
