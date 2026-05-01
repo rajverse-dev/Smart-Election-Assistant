@@ -21,11 +21,22 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/smart-elect
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.log('MongoDB connection error: ', err));
 
-// Basic route
-app.get('/', (req, res) => {
+const path = require('path');
+
+// Basic route (Remove this later if it conflicts with frontend)
+app.get('/api', (req, res) => {
   res.send('Smart Election Assistant API is running...');
 });
 
+// Serve static frontend in production
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Catch-all route to serve React app for non-API requests
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Cloud Run requires listening on port 8080 or PORT env var
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
