@@ -6,12 +6,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 exports.handleChat = async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, sessionId } = req.body;
     
-    // Save query to DB for dashboard to display
-    if (message) {
-      const chatEntry = new Chat({ query: message });
-      await chatEntry.save();
+    if (!message || !sessionId) {
+      return res.status(400).json({ error: "Message and sessionId are required" });
     }
 
     // Check if API key is configured
@@ -21,26 +19,65 @@ exports.handleChat = async (req, res) => {
       });
     }
 
+    // Fetch existing chat history from MongoDB
+    let chatDoc = await Chat.findOne({ sessionId });
+    if (!chatDoc) {
+      chatDoc = new Chat({ sessionId, messages: [] });
+    }
+
     // Initialize the model
     const model = genAI.getGenerativeModel(
-      { model: "gemini-1.5-flash" },
+      { 
+        model: "gemini-2.5-flash",
+        systemInstruction: "You are VoteMate AI, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers."
+      },
       { customHeaders: { 'Referer': 'https://smart-election-assistant-837090440574.us-central1.run.app' } }
     );
 
-    // Provide context for the VoteMate AI
-    const systemInstruction = "You are VoteMate AI, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers.";
-    
-    // Call Gemini API
-    const result = await model.generateContent([
-      { text: systemInstruction },
-      { text: "User query: " + message }
-    ]);
-    
+    // Format history for Gemini API
+    const history = chatDoc.messages.map(msg => ({
+      role: msg.role,
+      parts: [{ text: msg.content }]
+    }));
+
+    // Start chat session with history
+    const chat = model.startChat({ history });
+
+    // Send the new message
+    const result = await chat.sendMessage(message);
     const reply = result.response.text();
+
+    // Save user message and model response to MongoDB
+    chatDoc.messages.push({ role: 'user', content: message });
+    chatDoc.messages.push({ role: 'model', content: reply });
+    chatDoc.lastUpdated = Date.now();
+    await chatDoc.save();
 
     res.status(200).json({ reply });
   } catch (error) {
     console.error("Chat error:", error);
+    
+    // Check if the error is a rate limit/quota error from Gemini API
+    if (error.status === 429 || (error.message && error.message.includes('429'))) {
+      return res.status(429).json({ 
+        error: "VoteMate AI is currently receiving too many requests. Please wait about 30 seconds and try again!" 
+      });
+    }
+
     res.status(500).json({ error: "Failed to process chat request" });
+  }
+};
+
+exports.getHistory = async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const chatDoc = await Chat.findOne({ sessionId });
+    if (!chatDoc) {
+      return res.status(200).json({ messages: [] });
+    }
+    res.status(200).json({ messages: chatDoc.messages });
+  } catch (error) {
+    console.error("Fetch history error:", error);
+    res.status(500).json({ error: "Failed to fetch chat history" });
   }
 };
