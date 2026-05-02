@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Bot } from 'lucide-react';
 import ChatMessage from './ChatMessage';
@@ -57,13 +57,13 @@ const HeroChat = () => {
     fetchHistory();
   }, []);
 
-  const handleSendMessage = async (text) => {
+  const handleSendMessage = useCallback(async (text) => {
     setMessages(prev => [...prev, { text, sender: 'user' }]);
     setIsTyping(true);
     
     // Log analytics event
     logEvent('chat_message_sent', { query: text });
-
+ 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -79,11 +79,9 @@ const HeroChat = () => {
         message_length: text.length,
         session_id: sessionRef.current 
       });
-
-      setTimeout(() => {
-        setMessages(prev => [...prev, { text: data.reply || "Sorry, I couldn't generate a response.", sender: 'bot' }]);
-        setIsTyping(false);
-      }, 600);
+ 
+      setMessages(prev => [...prev, { text: data.reply || "Sorry, I couldn't generate a response.", sender: 'bot' }]);
+      setIsTyping(false);
     } catch (error) {
       console.error(error);
       setIsTyping(false);
@@ -94,7 +92,7 @@ const HeroChat = () => {
         session_id: sessionRef.current 
       });
     }
-  };
+  }, []);
 
   return (
     <motion.section 

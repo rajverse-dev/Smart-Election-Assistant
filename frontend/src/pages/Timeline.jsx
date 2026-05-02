@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * Timeline component displays a vertical list of election milestones.
+ * Fetches data from the backend /api/timeline endpoint.
+ */
 const Timeline = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);

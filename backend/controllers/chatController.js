@@ -4,6 +4,13 @@ const Chat = require('../models/Chat');
 // Initialize the Gemini API client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+/**
+ * Handles incoming chat messages from the user.
+ * Interacts with the Gemini API to generate responses and stores history in MongoDB.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 exports.handleChat = async (req, res) => {
   try {
     const { message, sessionId } = req.body;
@@ -29,7 +36,11 @@ exports.handleChat = async (req, res) => {
     const model = genAI.getGenerativeModel(
       { 
         model: "gemini-2.5-flash",
-        systemInstruction: "You are VoteMate AI, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers."
+        systemInstruction: "You are VoteMate AI, an AI designed to help citizens of India with information about elections, voting processes, eligibility, and required documents. Provide concise, accurate, and helpful answers.",
+        generationConfig: {
+          maxOutputTokens: 500,
+          temperature: 0.7,
+        }
       },
       { customHeaders: { 'Referer': 'https://smart-election-assistant-837090440574.us-central1.run.app' } }
     );
@@ -68,6 +79,12 @@ exports.handleChat = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves the chat history for a specific session.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 exports.getHistory = async (req, res) => {
   try {
     const { sessionId } = req.params;

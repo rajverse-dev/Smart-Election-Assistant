@@ -1,5 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import HeroChat from './HeroChat';
 
 // Mock the global fetch function
@@ -8,6 +8,11 @@ global.fetch = vi.fn();
 describe('HeroChat Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default fetch mock for history
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({ messages: [] })
+    });
   });
 
   it('renders the chatbot with an initial greeting message', () => {
@@ -17,17 +22,19 @@ describe('HeroChat Component', () => {
   });
 
   it('allows user to type and send a message', async () => {
-    // Mock a successful API response
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ reply: "Here is your polling booth info." }),
+    // Mock fetch for both history and chat submission
+    fetch.mockImplementation((url) => {
+      if (url && url.includes('/history/')) {
+        return Promise.resolve({ ok: true, json: async () => ({ messages: [] }) });
+      }
+      return Promise.resolve({ ok: true, json: async () => ({ reply: "Here is your polling booth info." }) });
     });
 
     render(<HeroChat />);
     
-    // Find the input field (since we don't have aria-labels yet, we look for placeholder)
-    const inputField = screen.getByPlaceholderText(/Type your message/i);
-    const sendButton = screen.getByRole('button', { name: '' }); // We'll need to add aria-label to this later!
+    // Find the input field
+    const inputField = screen.getByPlaceholderText(/Ask about voting/i);
+    const sendButton = screen.getByRole('button', { name: 'Send message' });
 
     // Type a message
     fireEvent.change(inputField, { target: { value: 'Where do I vote?' } });
@@ -42,6 +49,6 @@ describe('HeroChat Component', () => {
     // Wait for the bot response to appear
     await waitFor(() => {
       expect(screen.getByText('Here is your polling booth info.')).toBeInTheDocument();
-    }, { timeout: 1000 });
+    });
   });
 });

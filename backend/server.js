@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const mongoSanitize = require('express-mongo-sanitize');
+const hpp = require('hpp');
 require('dotenv').config();
 
 const rateLimit = require('express-rate-limit');
@@ -16,9 +20,13 @@ const apiLimiter = rateLimit({
 });
 
 // Middleware
-app.use('/api/', apiLimiter);
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
+app.use(compression());
 app.use(cors());
 app.use(express.json());
+app.use('/api/', apiLimiter);
 
 // Routes
 app.use('/api/chat', require('./routes/chatRoutes'));

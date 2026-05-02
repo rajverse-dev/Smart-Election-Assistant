@@ -94,6 +94,7 @@ const VotingGuide = () => {
         <div className="flex justify-between mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
           <button
             onClick={prevStep}
+            aria-label="Previous step"
             disabled={currentStep === 0}
             className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
               currentStep === 0 
@@ -106,6 +107,7 @@ const VotingGuide = () => {
           
           <button
             onClick={nextStep}
+            aria-label="Next step"
             disabled={currentStep === steps.length - 1}
             className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
               currentStep === steps.length - 1 

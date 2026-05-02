@@ -1,3 +1,10 @@
+/**
+ * Fetches nearby polling booths using Google Places API (New).
+ * Searches for schools and community halls within a 5km radius of the provided coordinates.
+ * 
+ * @param {Object} req - Express request object containing lat and lng in query
+ * @param {Object} res - Express response object
+ */
 exports.getNearbyBooths = async (req, res) => {
   try {
     const { lat, lng } = req.query;

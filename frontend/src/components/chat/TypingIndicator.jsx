@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Bot } from 'lucide-react';
 
-const TypingIndicator = () => {
+const TypingIndicator = memo(() => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -31,6 +32,8 @@ const TypingIndicator = () => {
       </div>
     </motion.div>
   );
-};
+});
+
+TypingIndicator.displayName = 'TypingIndicator';
 
 export default TypingIndicator;

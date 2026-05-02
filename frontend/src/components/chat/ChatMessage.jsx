@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { Bot, User } from 'lucide-react';
 
-const ChatMessage = ({ message, sender }) => {
+const ChatMessage = memo(({ message, sender }) => {
   const isUser = sender === 'user';
 
   return (
@@ -32,6 +33,8 @@ const ChatMessage = ({ message, sender }) => {
       )}
     </motion.div>
   );
-};
+});
+
+ChatMessage.displayName = 'ChatMessage';
 
 export default ChatMessage;

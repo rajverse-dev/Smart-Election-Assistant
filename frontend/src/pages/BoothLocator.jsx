@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { MapPin, Navigation } from 'lucide-react';
 import { APIProvider, Map, Marker } from '@vis.gl/react-google-maps';
 
+/**
+ * BoothLocator component provides an interactive map to find nearby polling booths.
+ * It uses the Google Maps JS API and browser geolocation.
+ */
 const BoothLocator = () => {
   const [booths, setBooths] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +25,7 @@ const BoothLocator = () => {
             .then(data => {
               if (Array.isArray(data)) {
                  setBooths(data);
-                 import('../../firebase').then(({ logEvent }) => {
+                 import('../firebase').then(({ logEvent }) => {
                    logEvent('booth_search', { lat, lng, results_count: data.length });
                  });
               } else {
