@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import Dashboard from './pages/Dashboard';
-import Simulation from './pages/Simulation';
-import VotingGuide from './pages/VotingGuide';
-import Timeline from './pages/Timeline';
-import BoothLocator from './pages/BoothLocator';
+
+const Home = lazy(() => import('./pages/Home'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Simulation = lazy(() => import('./pages/Simulation'));
+const VotingGuide = lazy(() => import('./pages/VotingGuide'));
+const Timeline = lazy(() => import('./pages/Timeline'));
+const BoothLocator = lazy(() => import('./pages/BoothLocator'));
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -28,14 +29,16 @@ function App() {
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <Toaster position="top-right" />
         <main className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/simulation" element={<Simulation />} />
-            <Route path="/guide" element={<VotingGuide />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/locator" element={<BoothLocator />} />
-          </Routes>
+          <Suspense fallback={<div className="flex items-center justify-center h-[50vh]"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div></div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/simulation" element={<Simulation />} />
+              <Route path="/guide" element={<VotingGuide />} />
+              <Route path="/timeline" element={<Timeline />} />
+              <Route path="/locator" element={<BoothLocator />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </Router>

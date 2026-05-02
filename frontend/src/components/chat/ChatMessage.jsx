@@ -6,8 +6,9 @@ const ChatMessage = ({ message, sender }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={`flex w-full mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
     >
       {!isUser && (

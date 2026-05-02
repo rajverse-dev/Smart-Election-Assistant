@@ -21,6 +21,9 @@ const BoothLocator = () => {
             .then(data => {
               if (Array.isArray(data)) {
                  setBooths(data);
+                 import('../../firebase').then(({ logEvent }) => {
+                   logEvent('booth_search', { lat, lng, results_count: data.length });
+                 });
               } else {
                  console.error("Expected array but got:", data);
                  setBooths([]);
@@ -54,8 +57,13 @@ const BoothLocator = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-2 h-[500px] flex items-center justify-center border border-gray-100 dark:border-gray-700 overflow-hidden relative">
-            {googleMapsApiKey ? (
+          <section aria-label="Map showing nearby polling booths" className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-2 h-[500px] flex items-center justify-center border border-gray-100 dark:border-gray-700 overflow-hidden relative">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-4"></div>
+                <p>Loading map...</p>
+              </div>
+            ) : googleMapsApiKey ? (
               <Map
                 defaultZoom={14}
                 defaultCenter={userLocation}
@@ -81,9 +89,9 @@ const BoothLocator = () => {
                 <p className="text-gray-500 dark:text-gray-400">Map unavailable. Please configure your VITE_GOOGLE_MAPS_API_KEY in frontend/.env</p>
               </div>
             )}
-          </div>
+          </section>
 
-          <div>
+          <article>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <MapPin className="w-6 h-6 text-primary-500" /> Nearby Booths
             </h2>
@@ -97,9 +105,9 @@ const BoothLocator = () => {
             ) : booths.length === 0 ? (
                <p className="text-gray-500">No booths found near you.</p>
             ) : (
-              <div className="space-y-4 max-h-[420px] overflow-y-auto pr-2">
+              <div className="space-y-4 max-h-[420px] overflow-y-auto pr-2" role="list">
                 {booths.map(booth => (
-                  <div key={booth.id} className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                  <div key={booth.id} role="listitem" className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <div>
                       <h3 className="font-bold text-lg text-gray-900 dark:text-white">{booth.name}</h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{booth.address}</p>
@@ -108,6 +116,7 @@ const BoothLocator = () => {
                       </span>
                     </div>
                     <button 
+                      aria-label={`Get directions to ${booth.name}`}
                       className="p-3 bg-primary-50 dark:bg-gray-700 hover:bg-primary-100 dark:hover:bg-gray-600 text-primary-600 dark:text-primary-400 rounded-full transition-colors"
                       onClick={() => {
                         window.open(`https://www.google.com/maps/dir/?api=1&destination=${booth.lat},${booth.lng}`, '_blank');
@@ -119,7 +128,7 @@ const BoothLocator = () => {
                 ))}
               </div>
             )}
-          </div>
+          </article>
         </div>
       </div>
     </APIProvider>

@@ -57,11 +57,13 @@ const ChatInput = ({ onSendMessage }) => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about voting..."
+            aria-label="Type your message"
             className="w-full bg-gray-100 dark:bg-gray-800 border border-transparent focus:border-primary-500 rounded-full pl-4 pr-10 py-2.5 outline-none text-sm text-gray-900 dark:text-white transition-all shadow-inner"
           />
           <button 
             type="button"
             onClick={toggleMic}
+            aria-label="Toggle voice input"
             className={`absolute right-2 p-1.5 rounded-full transition-colors ${isListening ? 'text-red-500 bg-red-100 dark:bg-red-900/30 animate-pulse' : 'text-gray-400 hover:text-primary-500 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
           >
             {isListening ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
@@ -71,6 +73,7 @@ const ChatInput = ({ onSendMessage }) => {
         <button 
           type="submit" 
           disabled={!input.trim()}
+          aria-label="Send message"
           className="p-2.5 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all flex items-center justify-center shrink-0"
         >
           <Send className="w-4 h-4 ml-0.5" />
